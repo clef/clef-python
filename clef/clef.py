@@ -1,31 +1,31 @@
 import requests
 
 class ClefSetupError(Exception):
-    """ Raised when there is something wrong with an app's credentials - app_id or app_secret """
+    """Invalid app_id or app_secret."""
     pass
 
 class ClefCodeError(Exception):
-    """ Raised when something goes wrong with OAuth handshake and Clef is unable to exchange code for access token """
+    """OAuth handshake failed. Clef unable to exchange code for access token."""
     pass
 
 class ClefTokenError(Exception):
-    """ Raised when Clef is unable to exchange token for user information """
+    """Clef unable to exchange token for user information."""
     pass 
 
 class ClefServerError(Exception):
-    """ Raised when Clef's servers are down """
+    """Clef servers are down."""
     pass 
 
 class ClefConnectionError(Exception):
-    """ Raised when no network connection is detected """
+    """No network connection detected."""
     pass 
 
 class ClefLogoutError(Exception):
-    """ Raised when an application's logout hook does not match their domain or has not been configured right """
+    """Logout hook does not match app domain or has not been configured correctly."""
     pass 
 
 class ClefNotFoundError(Exception):
-    """ Raised when request to Clef API returns a 404 error """
+    """Invalid API endpoint was requested."""
     pass 
 
 # Clef 403 error strings mapped to the right class of error to raise 
@@ -43,14 +43,15 @@ def clef_error_check(func_to_decorate):
             response = func_to_decorate(*args, **kwargs)
         except requests.exceptions.RequestException:
             raise ClefConnectionError(
-                'Clef encountered a network connectivity problem. Are you sure you are connected to the Internet?')
+                'Clef encountered a network connectivity problem. Are you sure you are connected to the Internet?'
+            )
         else:
             raise_right_error(response)
         return response.json() # decode json  
     return wrapper 
 
 def raise_right_error(response):
-    """Raise correct error when bad response received."""
+    """Raise appropriate error when bad response received."""
     if response.status_code == 500:
         raise ClefServerError('Clef server is down right now.')
     if response.status_code == 403:
@@ -93,11 +94,11 @@ class ClefAPI(object):
         """Return Clef user info after exchanging code for OAuth token."""
         if access_token:
             return self._get_user_info(access_token)
-        # need to do the handshake to get the token
+        # do the handshake to get token
         data = dict(code=code, app_id=self.api_key, app_secret=self.api_secret)
         token_response = self._call('POST', self.authorize_url, params=data) # json decoded
         access_token = token_response.get('access_token')
-        # make a request with the token to get user details
+        # make request with token to get user details
         info_response = self._call('GET', self.info_url, params={'access_token': access_token})
         user_info = info_response.get('info')
         return user_info 

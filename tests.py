@@ -7,7 +7,7 @@ TEST_CODE = 'code_1234567890'
 TEST_TOKEN = 'token_1234567890'
 
 class ClefConfigTests(unittest.TestCase):
-    
+    """Make sure basic init is set up correctly."""
     def test_configuration(self):
         self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=TEST_APP_SECRET)
         self.assertEqual(self.api.api_key, TEST_APP_ID)
@@ -63,13 +63,13 @@ class ClefAPITests(unittest.TestCase):
         self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=TEST_APP_SECRET)
 
     def test_get_user_info(self):
-        """ Client only has to pass in code to get the details they want """
+        """Return user info when a valid code is passed in."""
         user_info = self.api.get_user_info(code=TEST_CODE)
         self.assertTrue(isinstance(user_info, dict))
         self.assertEqual(user_info.get('id'), '12345')
 
     def test_get_user_info_without_handshake(self):
-        """ If client passes in optional token parameter, oauth handshake should be bypassed """
+        """ Bypass OAuth handshake when access_token passed in """
         user_info = self.api.get_user_info(access_token=TEST_TOKEN)
         self.assertTrue(isinstance(user_info, dict))
         self.assertEqual(user_info.get('id'), '12345')
@@ -92,20 +92,5 @@ class ClefAPITests(unittest.TestCase):
         self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=None)
         self.assertRaises(clef.ClefSetupError, self.api.get_user_info, code='')
 
-
-        
-
-
-
-
-
-
 if __name__ == '__main__':
     unittest.main()
-
-    
-
-
-
-
-
