@@ -1,9 +1,6 @@
 import requests
 from requests.exceptions import RequestException 
 
-CLEF_APP_ID ='4f318ac177a9391c2e0d221203725ffd'
-CLEF_APP_SECRET = '2125d80f4583c52c46f8084bcc030c9b'
-
 class ClefSetupError(Exception):
 	""" Raised when there is something wrong with a user's credentials - Clef app_id or app_secret """
 	pass
@@ -99,11 +96,9 @@ class ClefAPI(object):
 		# need to do the handshake to get the token
 		data = dict(code=code, app_id=self.api_key, app_secret=self.api_secret)
 		token_response = self._call('post', self.authorize_url, params=data)
-		# token_dict = token_response.json() # decode json
 		access_token = token_response.get('access_token')
 		# make a request with the token to get user details
 		info_response = self._call('get', self.info_url, params={'access_token': access_token})
-		# info_dict = info_response.json()
 		user_info = info_response.get('info')
 		return user_info 
 
@@ -111,73 +106,14 @@ class ClefAPI(object):
 		""" We already have a token and do not need to go through the handshake """
 		# TODO: check to see if access tokens expire
 		info_response = self._call('get', self.info_url, params={'access_token': access_token})
-		# info_dict = info_response.json()
 		user_info = info_response.get('info')
 		return user_info
 
-
-
-
-
-
-
-def callback():
-	code = 'code_123456789'
-	authorize_url = 'https://clef.io/api/v1/authorize'
-	data = dict(code=code, app_id=CLEF_APP_ID, app_secret=CLEF_APP_SECRET)
-	try:
-		response = requests.post(authorize_url, data=data)
-	except RequestException:
-		raise ClefConnectionError('You have not established a connection')
-	
-	status_code = response.status_code
-
-	# something went wrong with exchanging code for token
-	if status_code == 403:
-		response_object = response.json()
-		message = response_object.get('error')
-		if 'OAuth' in message:
-			raise ClefCodeError(message)
-		raise ClefSetupError(message)
-
-	if status_code == 500:
-		raise ClefServerError('Bad server response')
-
-
-	response_object = response.json()
-	token = response_object.get('access_token')
-
-	info_url = 'https://clef.io/api/v1/info'
-
-	params = dict(access_token=token)
-
-	try:
-		response = requests.get(info_url, params=params)
-	except RequestException:
-		raise ClefConnectionError('You have not established a connection')
-
-	status_code = response.status_code
-
-	if status_code == 403:
-		# invalid token 
-		raise ClefTokenError('Something went wrong on Clef"s side')
-
-	if status_code == 500:
-		raise ClefServerError('Bad server response')
-
-	response_object = response.json()
-	user_dict = response_object.get('info')
-	print user_dict
-
-	# do stuff with your user
-	return user_dict 
-
 if __name__ == '__main__':
-	api = ClefAPI(app_id=CLEF_APP_ID, app_secret=CLEF_APP_SECRET)
+
+	api = ClefAPI(app_id='test_app_id', app_secret='test_app_secret')
 	code = 'code_1234567890'
 	user_info = api.get_user_info(code=code)
-	# print user_info
-	# user_info = api.get_user_info(access_token='token_1234567890')
 	print user_info 
 
 
