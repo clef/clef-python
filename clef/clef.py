@@ -31,7 +31,7 @@ class ClefNotFoundError(Exception):
 
 # Clef 403 error strings mapped to the right class of error to raise 
 message_to_error_map = {
-    'Invalid App Id.': ClefSetupError,
+    'Invalid App ID.': ClefSetupError,
     'Invalid App Secret.': ClefSetupError,
     'Invalid OAuth Code.': ClefCodeError,
     'Invalid token.' : ClefTokenError,
@@ -104,7 +104,7 @@ class ClefAPI(object):
 
     def _get_user_info(self, access_token):
         """ We already have a token and do not need to go through the handshake """
-        # TODO: check to see if access tokens can be stored by applications
+        # TODO: check to see if access tokens can be stored by applications or if they expire
         info_response = self._call('GET', self.info_url, params={'access_token': access_token})
         user_info = info_response.get('info')
         return user_info
