@@ -82,9 +82,9 @@ class ClefAPI(object):
 	def _call(self, method, url, params):
 		""" Makes request to Clef API. Decorator takes care of error handling """
 		request_params = {}
-		if method == 'get':
+		if method == 'GET':
 			request_params['params'] = params 
-		elif method == 'post':
+		elif method == 'POST':
 			request_params['data'] = params 
 		response = requests.request(method, url, **request_params)
 		return response 
@@ -95,17 +95,17 @@ class ClefAPI(object):
 			return self._get_user_info(access_token)
 		# need to do the handshake to get the token
 		data = dict(code=code, app_id=self.api_key, app_secret=self.api_secret)
-		token_response = self._call('post', self.authorize_url, params=data)
+		token_response = self._call('POST', self.authorize_url, params=data)
 		access_token = token_response.get('access_token')
 		# make a request with the token to get user details
-		info_response = self._call('get', self.info_url, params={'access_token': access_token})
+		info_response = self._call('GET', self.info_url, params={'access_token': access_token})
 		user_info = info_response.get('info')
 		return user_info 
 
 	def _get_user_info(self, access_token):
 		""" We already have a token and do not need to go through the handshake """
 		# TODO: check to see if access tokens expire
-		info_response = self._call('get', self.info_url, params={'access_token': access_token})
+		info_response = self._call('GET', self.info_url, params={'access_token': access_token})
 		user_info = info_response.get('info')
 		return user_info
 
