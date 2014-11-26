@@ -1,5 +1,4 @@
 import requests
-from requests.exceptions import RequestException 
 
 class ClefSetupError(Exception):
     """ Raised when there is something wrong with an app's credentials - app_id or app_secret """
@@ -38,19 +37,20 @@ message_to_error_map = {
 }
 
 def clef_error_check(func_to_decorate):
-    """ A decorator for handling errors when making call to Clef API """
+    """Return JSON decoded response from Clef API call. Handle errors when bad response encountered."""
     def wrapper(*args, **kwargs):
         try:
             response = func_to_decorate(*args, **kwargs)
-        except RequestException:
-            raise ClefConnectionError('Clef encountered a network connectivity problem. Are you sure you are connected to the Internet?')
+        except requests.exceptions.RequestException:
+            raise ClefConnectionError(
+                'Clef encountered a network connectivity problem. Are you sure you are connected to the Internet?')
         else:
             raise_right_error(response)
         return response.json() # decode json  
     return wrapper 
 
 def raise_right_error(response):
-    """ If API call returns status code other than 200, raise the right kind of error """
+    """Raise correct error when bad response received."""
     if response.status_code == 500:
         raise ClefServerError('Clef server is down right now.')
     if response.status_code == 403:
@@ -80,7 +80,7 @@ class ClefAPI(object):
 
     @clef_error_check
     def _call(self, method, url, params):
-        """ Makes request to Clef API. Decorator takes care of error handling """
+        """Return JSON response from Clef API call."""
         request_params = {}
         if method == 'GET':
             request_params['params'] = params 
@@ -90,12 +90,12 @@ class ClefAPI(object):
         return response 
 
     def get_user_info(self, code=None, access_token=None):
-        """ Exchanges a code for an Oauth token, does the handshake and returns Clef user info """
+        """Return Clef user info after exchanging code for OAuth token."""
         if access_token:
             return self._get_user_info(access_token)
         # need to do the handshake to get the token
         data = dict(code=code, app_id=self.api_key, app_secret=self.api_secret)
-        token_response = self._call('POST', self.authorize_url, params=data)
+        token_response = self._call('POST', self.authorize_url, params=data) # json decoded
         access_token = token_response.get('access_token')
         # make a request with the token to get user details
         info_response = self._call('GET', self.info_url, params={'access_token': access_token})
@@ -103,14 +103,13 @@ class ClefAPI(object):
         return user_info 
 
     def _get_user_info(self, access_token):
-        """ We already have a token and do not need to go through the handshake """
+        """Return Clef user info. Bypass OAuth handshake."""
         # TODO: check to see if access tokens can be stored by applications or if they expire
         info_response = self._call('GET', self.info_url, params={'access_token': access_token})
         user_info = info_response.get('info')
         return user_info
 
 if __name__ == '__main__':
-
     api = ClefAPI(app_id='test_app_id', app_secret='test_app_secret')
     code = 'code_1234567890'
     user_info = api.get_user_info(code=code)
