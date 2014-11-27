@@ -70,9 +70,6 @@ def raise_right_error(response):
             message = 'Something went wrong at Clef. We are unable to retrieve user information with this token.'
         raise error_class(message)
     if response.status_code == 400:
-        import logging
-        logging.error('this is the response')
-        logging.error(response)
         message = response.json().get('error')
         raise ClefLogoutError(message)
     if response.status_code == 404:
@@ -91,6 +88,7 @@ class ClefAPI(object):
         self.api_endpoint = '/'.join([root, version])
         self.authorize_url = '/'.join([self.api_endpoint, 'authorize'])
         self.info_url = '/'.join([self.api_endpoint, 'info'])
+        self.logout_url = '/'.join([self.api_endpoint, 'logout'])
 
     @clef_error_check
     def _call(self, method, url, params):
@@ -122,6 +120,13 @@ class ClefAPI(object):
         info_response = self._call('GET', self.info_url, params={'access_token': access_token})
         user_info = info_response.get('info')
         return user_info
+
+    def logout_user(self, logout_token):
+        """Return Clef user info after exchanging logout token."""
+        data = dict(logout_token=logout_token, app_id=self.api_key, app_secret=self.app_secret)
+        logout_response = self._call('POST', self.logout_url, params=data)
+        clef_user_id = logout_response.get('clef_id')
+        return clef_user_id
 
 if __name__ == '__main__':
     api = ClefAPI(app_id='test_app_id', app_secret='test_app_secret')
