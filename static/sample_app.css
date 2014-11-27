@@ -1,0 +1,42 @@
+body{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #222;
+    text-align: center;
+    /* fallback for browsers that don't support RGBa */
+    background-color: rgb(222, 222, 79);
+    background-color: rgba(222, 222, 79, 0.9);
+}
+ul{ 
+    float: left;
+    list-style-type: none;
+    padding-top: 20px;
+}
+li{
+    display: block;
+    text-decoration: none;
+}
+a{
+    display: block;
+    float: left;
+}
+
+.main{
+    padding-top: 150px;
+}
+.form-group{
+    margin-bottom: 0;
+    padding: 0 75px;
+}
+.form-group input, .form-group button{
+    border-radius: 2px;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #222;
+    background-color: rgb(255, 255, 255);
+    background-color: rgba(255,255,255,0.9)
+}
+.form-group button{
+    cursor: default;
+}
+

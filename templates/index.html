@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='sample_app.css') }}">
+  </head>
+  <body>
+  <header>
+    <div>
+      <ul>
+      <li><a href="//docs.getclef.com/v1.0/docs/getting-started" target="_blank" title="Clef API Docs">Clef API Docs</a></li>
+      <li><a href="//getclef.com/" target="_blank" title="Clef Developer Portal">Clef Developer Portal</a></li>
+      {% if name %}
+      <a href="{{ url_for('logout') }}">Logout</a>
+      {% endif %}
+      </ul>
+    </div>
+  </header>
+
+  <div class="main">
+
+    {% if name %}
+      <div class="form-group">
+        <button class="btn btn-lg">Hello {{name}}. You are logged in.</button>
+      </div>
+      
+    {% elif error %}
+      <div class="form-group">
+        <button class="btn btn-lg">Whoops, looks like something went wrong.</button>
+      </div>
+      <br>
+      <a href="{{ url_for('home') }}">Try again</a>
+    {% else %}
+    <div class="row">
+        <div class="form-group">
+          <input type="submit" class="btn btn-lg clef-button" data-app-id="4f318ac177a9391c2e0d221203725ffd" data-style="flat" data-redirect-url="http://localhost:5000/oauth_callback" data-custom="true" value="Log in with your phone" />
+        </div>
+    </div>
+    {% endif %}
+
+
+  </div>    
+  <script type='text/javascript' src='https://clef.io/v3/clef.js'></script>
+  </body>
+</html>
