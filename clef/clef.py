@@ -1,5 +1,9 @@
 import requests
 
+class ClefError(Exception):
+    """Base error."""
+    pass
+
 class ClefSetupError(Exception):
     """Invalid app_id or app_secret."""
     pass
@@ -31,9 +35,12 @@ class ClefNotFoundError(Exception):
 # Clef 403 error strings mapped to the right class of error to raise 
 message_to_error_map = {
     'Invalid App ID.': ClefSetupError,
+    'Invalid App.': ClefSetupError,
     'Invalid App Secret.': ClefSetupError,
     'Invalid OAuth Code.': ClefCodeError,
     'Invalid token.' : ClefTokenError,
+    'Invalid Logout Token.': ClefLogoutError,
+
 }
 
 def clef_error_check(func_to_decorate):
@@ -52,6 +59,8 @@ def clef_error_check(func_to_decorate):
 
 def raise_right_error(response):
     """Raise appropriate error when bad response received."""
+    if response.status_code == 200:
+        return 
     if response.status_code == 500:
         raise ClefServerError('Clef server is down right now.')
     if response.status_code == 403:
@@ -61,11 +70,15 @@ def raise_right_error(response):
             message = 'Something went wrong at Clef. We are unable to retrieve user information with this token.'
         raise error_class(message)
     if response.status_code == 400:
-        raise ClefLogoutError(response.json().get('error'))
+        import logging
+        logging.error('this is the response')
+        logging.error(response)
+        message = response.json().get('error')
+        raise ClefLogoutError(message)
     if response.status_code == 404:
         raise ClefNotFoundError('Unable to retrieve the page. Are you sure the Clef API endpoint is configured right?')
-    # maybe make this more explicit and only return when status code is 200? 
-    return
+    # too restrictive? 
+    raise ClefError
 
 
 class ClefAPI(object):
