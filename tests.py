@@ -14,19 +14,21 @@ TEST_TOKEN = 'token_1234567890'
 
 class ClefConfigTests(unittest.TestCase):
     """Make sure basic init is set up correctly."""
-    def test_configuration(self):
+    def test_default_configuration(self):
         self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=TEST_APP_SECRET)
         self.assertEqual(self.api.api_key, TEST_APP_ID)
         self.assertEqual(self.api.api_secret, TEST_APP_SECRET)
         self.assertEqual(self.api.api_endpoint, 'https://clef.io/api/v1')
         self.assertEqual(self.api.authorize_url, 'https://clef.io/api/v1/authorize')
         self.assertEqual(self.api.info_url, 'https://clef.io/api/v1/info')
+        self.assertEqual(self.api.logout_url, 'https://clef.io/api/v1/logout')
 
-    def test_optional_root(self):
+    def test_changing_root_config(self):
         self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=TEST_APP_SECRET, root='https://getclef.com')
         self.assertEqual(self.api.api_endpoint, 'https://getclef.com/v1')
         self.assertEqual(self.api.authorize_url, 'https://getclef.com/v1/authorize')
         self.assertEqual(self.api.info_url, 'https://getclef.com/v1/info')
+        self.assertEqual(self.api.logout_url, 'https://getclef.com/v1/logout')
 
 class ClefIntegrationTests(unittest.TestCase):
     """Verify that endpoints are working with test credentials."""
@@ -34,7 +36,7 @@ class ClefIntegrationTests(unittest.TestCase):
         self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=TEST_APP_SECRET)
 
     def test_endpoints(self):
-        response = requests.post(self.api.authorize_url)
+        response = requests.get(self.api.authorize_url)
         self.assertFalse(str(response.status_code).startswith('5'))
         response = requests.get(self.api.info_url)
         self.assertFalse(str(response.status_code).startswith('5'))
@@ -61,7 +63,6 @@ class ClefMockCallTests(unittest.TestCase):
     def test_get_user_info(self):
         """Verify get_user_info makes the right calls."""
         code = 'fake_code'
-        # api = clef.ClefAPI(app_id='fake_id', app_secret='fake_secret')
         self.api._call = mock.Mock()
         self.api.get_user_info(code=code)
 
