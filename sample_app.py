@@ -21,14 +21,14 @@ def home(name=None, error=None):
     
     return render_template('index.html', name=name, error=error)
 
-# the route you set as your redirect_url when you set up your application with clef
+# the data-redirect-url attribute you set in your clef button
 # line 31 in templates/index.html
 @app.route('/oauth_callback')
 def clef_oauth_callback():
     # configure the client 
     code = request.args.get('code')
     client = clef.ClefAPI(app_id=CLEF_APP_ID, app_secret=CLEF_APP_SECRET)
-    # make the call to get user information from Clef 
+    # call to get user information handles the OAuth handshake
     try:
         user_dict = client.get_user_info(code=code)
     # customize how you want to handle errors
