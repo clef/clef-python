@@ -123,7 +123,7 @@ class ClefAPI(object):
 
     def logout_user(self, logout_token):
         """Return Clef user info after exchanging logout token."""
-        data = dict(logout_token=logout_token, app_id=self.api_key, app_secret=self.app_secret)
+        data = dict(logout_token=logout_token, app_id=self.api_key, app_secret=self.api_secret)
         logout_response = self._call('POST', self.logout_url, params=data)
         clef_user_id = logout_response.get('clef_id')
         return clef_user_id

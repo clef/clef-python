@@ -55,29 +55,48 @@ class ClefIntegrationTests(unittest.TestCase):
         self.assertEqual(user_info.get('id'), '12345')
 
 class ClefMockCallTests(unittest.TestCase):
+    def setUp(self):
+        self.api = clef.ClefAPI(app_id='fake_id', app_secret='fake_secret')
+
     def test_get_user_info(self):
         """Verify get_user_info makes the right calls."""
         code = 'fake_code'
-        api = clef.ClefAPI(app_id='fake_id', app_secret='fake_secret')
-        api._call = mock.Mock()
-        api.get_user_info(code=code)
+        # api = clef.ClefAPI(app_id='fake_id', app_secret='fake_secret')
+        self.api._call = mock.Mock()
+        self.api.get_user_info(code=code)
 
         # verify. mock calls are tuples of positional and keyword arguments
-        self.assertEqual(api._call.call_count, 2)
-        call_args = api._call.call_args_list
+        self.assertEqual(self.api._call.call_count, 2)
+        call_args = self.api._call.call_args_list
         authorize_call = call_args[0]
         authorize_pos_args = authorize_call[0]
         authorize_kwargs = authorize_call[1]
-        self.assertEqual(authorize_pos_args, ('POST', 'https://clef.io/api/v1/authorize'))
+        self.assertEqual(authorize_pos_args, ('POST', self.api.authorize_url))
         self.assertTrue(authorize_kwargs.has_key('params'))
         self.assertTrue(isinstance(authorize_kwargs.get('params'), dict))
 
         info_call = call_args[1]
         info_pos_args = info_call[0]
         info_kwargs = info_call[1]
-        token = api._call().get()
-        self.assertEqual(info_pos_args, ('GET', 'https://clef.io/api/v1/info'))
+        token = self.api._call().get()
+        self.assertEqual(info_pos_args, ('GET', self.api.info_url))
         self.assertEqual(info_kwargs, ({'params': {'access_token': token}}))
+
+    def test_logout_user(self):
+        """Verify logout_user makes the right calls."""
+        logout_token = 'fake_token'
+        self.api._call = mock.Mock()
+        self.api.logout_user(logout_token=logout_token)
+
+        # verify right calls are made
+        self.assertEqual(self.api._call.call_count, 1)
+        call_args = self.api._call.call_args_list
+        exchange_call = call_args[0]
+        exchange_pos_args = exchange_call[0]
+        exchange_kwargs = exchange_call[1]
+        self.assertEqual(exchange_pos_args, ('POST', self.api.logout_url))
+        self.assertTrue(exchange_kwargs.has_key('params'))
+        self.assertTrue(isinstance(exchange_kwargs.get('params'), dict))
 
 class ClefAPITests(unittest.TestCase):
     """Verify the appropriate error is raised according to the endpoint and reponse status code."""
