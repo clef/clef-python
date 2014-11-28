@@ -40,6 +40,7 @@ message_to_error_map = {
     'Invalid OAuth Code.': ClefCodeError,
     'Invalid token.' : ClefTokenError,
     'Invalid Logout Token.': ClefLogoutError,
+    None: ClefError,
 
 }
 
@@ -127,11 +128,4 @@ class ClefAPI(object):
         logout_response = self._call('POST', self.logout_url, params=data)
         clef_user_id = logout_response.get('clef_id')
         return clef_user_id
-
-if __name__ == '__main__':
-    api = ClefAPI(app_id='test_app_id', app_secret='test_app_secret')
-    code = 'code_1234567890'
-    user_info = api.get_user_info(code=code)
-    print user_info 
-
-
+ 
