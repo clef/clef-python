@@ -21,8 +21,7 @@ def home(name=None, error=None):
     
     return render_template('index.html', name=name, error=error)
 
-# the data-redirect-url attribute you set in your clef button
-# line 31 in templates/index.html
+# the data-redirect-url attribute you set in your clef button - line 36 in templates/index.html
 @app.route('/oauth_callback')
 def clef_oauth_callback():
     # configure the client 
