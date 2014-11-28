@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import json
 import unittest
 
@@ -48,13 +50,13 @@ class ClefIntegrationTests(unittest.TestCase):
         """Return user info when a valid code is passed in."""
         user_info = self.api.get_user_info(code=TEST_CODE)
         self.assertTrue(isinstance(user_info, dict))
-        self.assertEqual(user_info.get('id'), '12345')
+        self.assertEqual(user_info['id'], '12345')
 
     def test_get_user_info_without_handshake(self):
         """ Bypass OAuth handshake when access_token passed in """
         user_info = self.api.get_user_info(access_token=TEST_TOKEN)
         self.assertTrue(isinstance(user_info, dict))
-        self.assertEqual(user_info.get('id'), '12345')
+        self.assertEqual(user_info['id'], '12345')
 
 class ClefMockCallTests(unittest.TestCase):
     def setUp(self):
@@ -73,8 +75,8 @@ class ClefMockCallTests(unittest.TestCase):
         authorize_pos_args = authorize_call[0]
         authorize_kwargs = authorize_call[1]
         self.assertEqual(authorize_pos_args, ('POST', self.api.authorize_url))
-        self.assertTrue(authorize_kwargs.has_key('params'))
-        self.assertTrue(isinstance(authorize_kwargs.get('params'), dict))
+        self.assertTrue('params' in authorize_kwargs)
+        self.assertTrue(isinstance(authorize_kwargs['params'], dict))
 
         info_call = call_args[1]
         info_pos_args = info_call[0]
@@ -96,8 +98,8 @@ class ClefMockCallTests(unittest.TestCase):
         exchange_pos_args = exchange_call[0]
         exchange_kwargs = exchange_call[1]
         self.assertEqual(exchange_pos_args, ('POST', self.api.logout_url))
-        self.assertTrue(exchange_kwargs.has_key('params'))
-        self.assertTrue(isinstance(exchange_kwargs.get('params'), dict))
+        self.assertTrue('params' in exchange_kwargs)
+        self.assertTrue(isinstance(exchange_kwargs['params'], dict))
 
 class ClefAPITests(unittest.TestCase):
     """Verify the appropriate error is raised according to the endpoint and reponse status code."""
