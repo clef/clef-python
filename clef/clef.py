@@ -5,7 +5,7 @@ class ClefError(Exception):
     pass
 
 class ClefSetupError(Exception):
-    """Invalid app_id or app_secret."""
+    """Invalid App Id or App secret."""
     pass
 
 class ClefCodeError(Exception):
@@ -45,7 +45,7 @@ message_to_error_map = {
 }
 
 def clef_error_check(func_to_decorate):
-    """Return JSON decoded response from Clef API call. Handle errors when bad response encountered."""
+    """Return JSON decoded response from API call. Handle errors when bad response encountered."""
     def wrapper(*args, **kwargs):
         try:
             response = func_to_decorate(*args, **kwargs)
@@ -93,7 +93,7 @@ class ClefAPI(object):
 
     @clef_error_check
     def _call(self, method, url, params):
-        """Return JSON response from Clef API call."""
+        """Return response from Clef API call."""
         request_params = {}
         if method == 'GET':
             request_params['params'] = params 
