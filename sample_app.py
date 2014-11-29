@@ -35,7 +35,8 @@ def clef_oauth_callback():
             clef.ClefTokenError, 
             clef.ClefCodeError, 
             clef.ClefServerError, 
-            clef.ClefConnectionError) as e:
+            clef.ClefConnectionError,
+            clef.ClefError) as e:
             pass
     # client returns a dictionary of user details
     else:
