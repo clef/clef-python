@@ -13,16 +13,16 @@ Getting Started
 The Clef API uses OAuth2 for authentication. Pass your credentials to the ClefAPI constructor and make
 a single call to handle the handshake and retrieve user information.
 
-# Get your credentials
+### Get your credentials
 [Create a Clef application](http://docs.getclef.com/v1.0/docs/creating-a-clef-application) to get your App ID and App secret
 
-# Add the Clef button
+### Add the Clef button
 The [button](http://docs.getclef.com/v1.0/docs/adding-the-clef-button) has a `data-redirect-url` which is where you will handle the OAuth callback. It can be customized or generated.
 
 Usage
 -----
 
-# Logging in a user
+### Logging in a user
 When a user logs in with Clef on their phone, Clef will send a code to the redirect url you defined in the button, which is where you handle the OAuth callback:
 ``` 
 from clef import clef
@@ -31,7 +31,7 @@ code = request.args.get("code")
 api = clef.ClefAPI(app_id="YOUR_APP_ID", app_secret="YOUR_APP_SECRET")
 user_info = api.get_user_info(code=code)
 ```
-# Logging out a user
+### Logging out a user
 When you configure your application, you also set up a logout hook so Clef can notify you when a user logs out of their phone.
 ```
 from clef import clef
@@ -54,4 +54,4 @@ The sample app doesn't handle [checking timestamped logins](http://docs.getclef.
 Resources
 --------
 Check out the [API docs](http://docs.getclef.com/v1.0/docs/).   
-Access your [developer dashboard](https://getclef.com/user/login)
+Access your [developer dashboard](https://getclef.com/user/login).
