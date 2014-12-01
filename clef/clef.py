@@ -63,12 +63,12 @@ def raise_right_error(response):
     if response.status_code == 200:
         return 
     if response.status_code == 500:
-        raise ClefServerError('Clef server is down right now.')
+        raise ClefServerError('Clef servers are down.')
     if response.status_code == 403:
         message = response.json().get('error')
         error_class = message_to_error_map[message]
         if error_class == ClefTokenError:
-            message = 'Something went wrong at Clef. We are unable to retrieve user information with this token.'
+            message = 'Something went wrong at Clef. Unable to retrieve user information with this token.'
         raise error_class(message)
     if response.status_code == 400:
         message = response.json().get('error')
