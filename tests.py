@@ -69,8 +69,7 @@ class ClefMockCallTests(unittest.TestCase):
 
         # verify. mock calls are tuples of positional and keyword arguments
         self.assertEqual(self.api._call.call_count, 2)
-        call_args = self.api._call.call_args_list
-        authorize_call, info_call = call_args
+        authorize_call, info_call = self.api._call.call_args_list
         authorize_pos_args, authorize_kwargs = authorize_call
         self.assertEqual(authorize_pos_args, ('POST', self.api.authorize_url))
         self.assertTrue('params' in authorize_kwargs)
@@ -89,8 +88,7 @@ class ClefMockCallTests(unittest.TestCase):
 
         # verify right calls are made
         self.assertEqual(self.api._call.call_count, 1)
-        call_args = self.api._call.call_args_list
-        exchange_call = call_args[0]
+        exchange_call = self.api._call.call_args_list[0]
         exchange_pos_args, exchange_kwargs = exchange_call
         self.assertEqual(exchange_pos_args, ('POST', self.api.logout_url))
         self.assertTrue('params' in exchange_kwargs)
