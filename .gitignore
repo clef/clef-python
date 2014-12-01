@@ -1,2 +1,13 @@
+# os files
+.DS_Store
+
 *.pyc
+*.cfg
 env*
+*.egg-info
+dist
+
+
+
+ 
+
