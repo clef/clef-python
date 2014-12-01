@@ -43,17 +43,17 @@ clef_user_id = api.logout_user(logout_token=logout_token)
 
 Sample App
 ----------
-This repo includes a one-file sample app that uses the Flask framework and demonstrates authentication. To try it out:
-* Install Flask if you don't already have it 
-`$ pip install Flask`
-* Run sample_app.py 
-`$ python sample_app.py`
-* Visit http://localhost:5000 in your browser
+This repo includes a one-file sample app that uses the Flask framework and demonstrates authentication. To try it out:    
+* Install Flask if you don't already have it      
+`$ pip install Flask`    
+* Run sample_app.py     
+`$ python sample_app.py`          
+* Visit http://localhost:5000 in your browser      
 
 The sample app doesn't handle [checking timestamped logins](http://docs.getclef.com/v1.0/docs/checking-timestamped-logins), but there are [code samples](http://docs.getclef.com/v1.0/docs/overview-1) that demonstrate how to do this.
 
  
 Resources
 --------
-Check out the [API docs](http://docs.getclef.com/v1.0/docs/).   
+Check out the [API docs](http://docs.getclef.com/v1.0/docs/).     
 Access your [developer dashboard](https://getclef.com/user/login).
