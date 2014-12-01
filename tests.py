@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-
 import json
 import unittest
 
 import mock
 import httpretty
-import requests
 
 from clef import clef
 
@@ -32,31 +30,31 @@ class ClefConfigTests(unittest.TestCase):
         self.assertEqual(self.api.info_url, 'https://getclef.com/v1/info')
         self.assertEqual(self.api.logout_url, 'https://getclef.com/v1/logout')
 
-class ClefIntegrationTests(unittest.TestCase):
-    """Verify that endpoints are working with test credentials."""
-    def setUp(self):
-        self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=TEST_APP_SECRET)
+# class ClefIntegrationTests(unittest.TestCase):
+#     """Verify that endpoints are working with test credentials."""
+#     def setUp(self):
+#         self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=TEST_APP_SECRET)
 
-    def test_endpoints(self):
-        response = requests.get(self.api.authorize_url)
-        self.assertFalse(str(response.status_code).startswith('5'))
-        response = requests.get(self.api.info_url)
-        self.assertFalse(str(response.status_code).startswith('5'))
-        logout_url = '/'.join([self.api.api_endpoint, 'logout'])
-        response = requests.get(logout_url)
-        self.assertFalse(str(response.status_code).startswith('5'))
+#     def test_endpoints(self):
+#         response = requests.get(self.api.authorize_url)
+#         self.assertFalse(str(response.status_code).startswith('5'))
+#         response = requests.get(self.api.info_url)
+#         self.assertFalse(str(response.status_code).startswith('5'))
+#         logout_url = '/'.join([self.api.api_endpoint, 'logout'])
+#         response = requests.get(logout_url)
+#         self.assertFalse(str(response.status_code).startswith('5'))
 
-    def test_get_user_info(self):
-        """Return user info when a valid code is passed in."""
-        user_info = self.api.get_user_info(code=TEST_CODE)
-        self.assertTrue(isinstance(user_info, dict))
-        self.assertEqual(user_info['id'], '12345')
+#     def test_get_user_info(self):
+#         """Return user info when a valid code is passed in."""
+#         user_info = self.api.get_user_info(code=TEST_CODE)
+#         self.assertTrue(isinstance(user_info, dict))
+#         self.assertEqual(user_info['id'], '12345')
 
-    def test_get_user_info_without_handshake(self):
-        """ Bypass OAuth handshake when access_token passed in """
-        user_info = self.api.get_user_info(access_token=TEST_TOKEN)
-        self.assertTrue(isinstance(user_info, dict))
-        self.assertEqual(user_info['id'], '12345')
+#     def test_get_user_info_without_handshake(self):
+#         """ Bypass OAuth handshake when access_token passed in """
+#         user_info = self.api.get_user_info(access_token=TEST_TOKEN)
+#         self.assertTrue(isinstance(user_info, dict))
+#         self.assertEqual(user_info['id'], '12345')
 
 class ClefMockCallTests(unittest.TestCase):
     def setUp(self):
@@ -71,16 +69,13 @@ class ClefMockCallTests(unittest.TestCase):
         # verify. mock calls are tuples of positional and keyword arguments
         self.assertEqual(self.api._call.call_count, 2)
         call_args = self.api._call.call_args_list
-        authorize_call = call_args[0]
-        authorize_pos_args = authorize_call[0]
-        authorize_kwargs = authorize_call[1]
+        authorize_call, info_call = call_args
+        authorize_pos_args, authorize_kwargs = authorize_call
         self.assertEqual(authorize_pos_args, ('POST', self.api.authorize_url))
         self.assertTrue('params' in authorize_kwargs)
+        
         self.assertTrue(isinstance(authorize_kwargs['params'], dict))
-
-        info_call = call_args[1]
-        info_pos_args = info_call[0]
-        info_kwargs = info_call[1]
+        info_pos_args, info_kwargs = info_call
         token = self.api._call().get()
         self.assertEqual(info_pos_args, ('GET', self.api.info_url))
         self.assertEqual(info_kwargs, ({'params': {'access_token': token}}))
@@ -95,8 +90,7 @@ class ClefMockCallTests(unittest.TestCase):
         self.assertEqual(self.api._call.call_count, 1)
         call_args = self.api._call.call_args_list
         exchange_call = call_args[0]
-        exchange_pos_args = exchange_call[0]
-        exchange_kwargs = exchange_call[1]
+        exchange_pos_args, exchange_kwargs = exchange_call
         self.assertEqual(exchange_pos_args, ('POST', self.api.logout_url))
         self.assertTrue('params' in exchange_kwargs)
         self.assertTrue(isinstance(exchange_kwargs['params'], dict))
