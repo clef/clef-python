@@ -4,6 +4,7 @@ import unittest
 
 import mock
 import httpretty
+import requests
 
 from clef import clef
 
@@ -30,31 +31,31 @@ class ClefConfigTests(unittest.TestCase):
         self.assertEqual(self.api.info_url, 'https://getclef.com/v1/info')
         self.assertEqual(self.api.logout_url, 'https://getclef.com/v1/logout')
 
-# class ClefIntegrationTests(unittest.TestCase):
-#     """Verify that endpoints are working with test credentials."""
-#     def setUp(self):
-#         self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=TEST_APP_SECRET)
+class ClefIntegrationTests(unittest.TestCase):
+    """Verify that endpoints are working with test credentials."""
+    def setUp(self):
+        self.api = clef.ClefAPI(app_id=TEST_APP_ID, app_secret=TEST_APP_SECRET)
 
-#     def test_endpoints(self):
-#         response = requests.get(self.api.authorize_url)
-#         self.assertFalse(str(response.status_code).startswith('5'))
-#         response = requests.get(self.api.info_url)
-#         self.assertFalse(str(response.status_code).startswith('5'))
-#         logout_url = '/'.join([self.api.api_endpoint, 'logout'])
-#         response = requests.get(logout_url)
-#         self.assertFalse(str(response.status_code).startswith('5'))
+    def test_endpoints(self):
+        response = requests.get(self.api.authorize_url)
+        self.assertFalse(str(response.status_code).startswith('5'))
+        response = requests.get(self.api.info_url)
+        self.assertFalse(str(response.status_code).startswith('5'))
+        logout_url = '/'.join([self.api.api_endpoint, 'logout'])
+        response = requests.get(logout_url)
+        self.assertFalse(str(response.status_code).startswith('5'))
 
-#     def test_get_user_info(self):
-#         """Return user info when a valid code is passed in."""
-#         user_info = self.api.get_user_info(code=TEST_CODE)
-#         self.assertTrue(isinstance(user_info, dict))
-#         self.assertEqual(user_info['id'], '12345')
+    def test_get_user_info(self):
+        """Return user info when a valid code is passed in."""
+        user_info = self.api.get_user_info(code=TEST_CODE)
+        self.assertTrue(isinstance(user_info, dict))
+        self.assertEqual(user_info['id'], '12345')
 
-#     def test_get_user_info_without_handshake(self):
-#         """ Bypass OAuth handshake when access_token passed in """
-#         user_info = self.api.get_user_info(access_token=TEST_TOKEN)
-#         self.assertTrue(isinstance(user_info, dict))
-#         self.assertEqual(user_info['id'], '12345')
+    def test_get_user_info_without_handshake(self):
+        """ Bypass OAuth handshake when access_token passed in """
+        user_info = self.api.get_user_info(access_token=TEST_TOKEN)
+        self.assertTrue(isinstance(user_info, dict))
+        self.assertEqual(user_info['id'], '12345')
 
 class ClefMockCallTests(unittest.TestCase):
     def setUp(self):
