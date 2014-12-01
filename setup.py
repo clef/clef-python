@@ -17,7 +17,7 @@ setup(
     author='Grace Wong',
     author_email='gwongz@gmail.com',
     url='https://github.com/gwongz/python-clef',
-    download_url='https://github.com/gwongz/python-clef/tarball/0.0.1',
+    download_url='https://github.com/gwongz/python-clef/tarball/0.0.2',
     license='MIT',
     keywords=['clef', 'api'],
     install_requires=[
