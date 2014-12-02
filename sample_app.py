@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import time 
 from flask import Flask, render_template, request, url_for, redirect, session
 from clef import clef 
@@ -6,6 +7,7 @@ app = Flask(__name__)
 app.secret_key = 'my_secret_key'
 
 # replace these test credentials with your own 
+# make sure to also replace the data-app-id attribute in your clef button - line 36 in templates/index.html
 CLEF_APP_ID ='4f318ac177a9391c2e0d221203725ffd'  
 CLEF_APP_SECRET = '2125d80f4583c52c46f8084bcc030c9b'
 
