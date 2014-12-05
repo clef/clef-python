@@ -7,6 +7,13 @@ Requires
 --------
 * requests
 
+Installation
+------------
+Install using pip:    
+ `pip install clef`
+
+
+
 Getting Started
 -----------
 The Clef API uses OAuth2 for authentication. Pass your credentials to the ClefAPI constructor and make
