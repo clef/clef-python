@@ -9,9 +9,9 @@ except ImportError:
 
 
 setup(
-    name='python-clef',
+    name='clef',
     packages=['clef'],
-    version='0.0.3',
+    version='0.0.1',
     description='A Python wrapper for the Clef API',
     long_description=long_description,
     author='Grace Wong',
@@ -21,9 +21,11 @@ setup(
     license='MIT',
     keywords=['clef', 'api'],
     classifiers=[
+        'Natural Language :: English',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7'
     ]
 )
 
