@@ -11,13 +11,13 @@ except ImportError:
 setup(
     name='clef',
     packages=['clef'],
-    version='0.0.1',
+    version='0.0.2',
     description='A Python wrapper for the Clef API',
     long_description=long_description,
     author='Grace Wong',
     author_email='gwongz@gmail.com',
     url='https://github.com/gwongz/python-clef',
-    download_url='https://github.com/gwongz/python-clef/tarball/0.0.1',
+    download_url='https://github.com/gwongz/python-clef/tarball/0.0.2',
     license='MIT',
     keywords=['clef', 'api'],
     classifiers=[
