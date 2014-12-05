@@ -9,9 +9,10 @@ Requires
 
 Installation
 ------------
-Install using pip:    
- `pip install clef`
-
+Install using pip:        
+ ```
+ pip install clef
+ ```
 
 
 Getting Started
