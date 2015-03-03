@@ -6,13 +6,13 @@ with open('LONG_DESCRIPTION.rst') as f:
 setup(
     name='clef',
     packages=['clef'],
-    version='0.0.4',
+    version='0.0.6',
     description='A Python wrapper for the Clef API',
     long_description=long_description,
     author='Grace Wong',
     author_email='gwongz@gmail.com',
     url='https://github.com/gwongz/clef-python',
-    download_url='https://github.com/gwongz/python-clef/tarball/0.0.4',
+    download_url='https://github.com/gwongz/python-clef/tarball/0.0.6',
     license='MIT',
     keywords=['clef', 'api'],
     classifiers=[
