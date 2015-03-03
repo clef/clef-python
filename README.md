@@ -24,7 +24,7 @@ The Clef API lets you retrieve information about a user after they log in to you
 
 #### Add the Clef button
 
-The [Clef button](http://docs.getclef.com/v1.0/docs/adding-the-clef-button) has a `data-redirect-url`, which is where you can retrieve user information.
+The [Clef button](http://docs.getclef.com/v1.0/docs/adding-the-clef-button) has a `data-redirect-url`, which is where you'll be interacting with the Clef API.
 
 Usage
 -----
