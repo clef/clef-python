@@ -71,10 +71,10 @@ class ClefAPI(object):
         version = 'v1'
         self.app_id = app_id
         self.app_secret = app_secret
-        self.api_endpoint = '/'.join([root, version])
-        self.authorize_url = '/'.join([self.api_endpoint, 'authorize'])
-        self.info_url = '/'.join([self.api_endpoint, 'info'])
-        self.logout_url = '/'.join([self.api_endpoint, 'logout'])
+        self.api_endpoint = '{0}/{1}'.format(root, version)
+        self.authorize_url = '{0}/authorize'.format(self.api_endpoint)
+        self.info_url = '{0}/info'.format(self.api_endpoint)
+        self.logout_url = '{0}/logout'.format(self.api_endpoint)
 
     @clef_error_check
     def _call(self, method, url, params):
@@ -87,18 +87,21 @@ class ClefAPI(object):
         response = requests.request(method, url, **request_params)
         return response
 
-    def get_login_information(self, code=None, access_token=None):
+    def get_login_information(self, code=None):
         """Return Clef user info after exchanging code for OAuth token."""
-        if access_token:
-            return self._get_user_info(access_token)
         # do the handshake to get token
         access_token = self._get_access_token(code)
         # make request with token to get user details
         return self._get_user_info(access_token)
 
     def _get_access_token(self, code):
-        data = dict(code=code, app_id=self.app_id, app_secret=self.app_secret)
-        token_response = self._call('POST', self.authorize_url, params=data) # json decoded
+        data = dict(
+            code=code,
+            app_id=self.app_id,
+            app_secret=self.app_secret
+        )
+        # json decoded
+        token_response = self._call('POST', self.authorize_url, params=data)
         return token_response.get('access_token')
 
     def _get_user_info(self, access_token):

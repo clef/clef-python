@@ -41,19 +41,12 @@ class ClefIntegrationTests(unittest.TestCase):
         self.assertFalse(str(response.status_code).startswith('5'))
         response = requests.get(self.api.info_url)
         self.assertFalse(str(response.status_code).startswith('5'))
-        logout_url = '/'.join([self.api.api_endpoint, 'logout'])
-        response = requests.get(logout_url)
+        response = requests.get(self.api.logout_url)
         self.assertFalse(str(response.status_code).startswith('5'))
 
     def test_get_login_information(self):
         """Return user info when a valid code is passed in."""
         user_info = self.api.get_login_information(code=TEST_CODE)
-        self.assertTrue(isinstance(user_info, dict))
-        self.assertEqual(user_info['id'], '12345')
-
-    def test_get_login_information_without_handshake(self):
-        """ Bypass OAuth handshake when access_token passed in """
-        user_info = self.api.get_login_information(access_token=TEST_TOKEN)
         self.assertTrue(isinstance(user_info, dict))
         self.assertEqual(user_info['id'], '12345')
 
