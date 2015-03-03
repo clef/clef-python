@@ -3,8 +3,10 @@ import requests
 class APIError(Exception): pass
 class InvalidAppIDError(APIError): pass
 class InvalidAppSecretError(APIError): pass
+class InvalidAppError(APIError): pass
 class InvalidOAuthCodeError(APIError): pass
 class InvalidOAuthTokenError(APIError): pass
+class InvalidLogoutHookURLError(APIError): pass
 class InvalidLogoutTokenError(APIError): pass
 class ServerError(APIError): pass
 class ConnectionError(APIError): pass
@@ -15,12 +17,13 @@ class NotFoundError(APIError): pass
 # Clef 403 error strings mapped to the right class of error to raise
 MESSAGE_TO_ERROR_MAP = {
     'Invalid App ID.': InvalidAppIDError,
-    'Invalid App.': InvalidAppIDError,
     'Invalid App Secret.': InvalidAppSecretError,
+    'Invalid App.': InvalidAppError,
     'Invalid OAuth Code.': InvalidOAuthCodeError,
     'Invalid token.': InvalidOAuthTokenError,
+    'Invalid logout hook URL.': InvalidLogoutHookURLError,
     'Invalid Logout Token.': InvalidLogoutTokenError,
-    None: APIError,
+    None: APIError
 }
 
 def clef_error_check(func_to_decorate):
@@ -51,7 +54,11 @@ def raise_right_error(response):
         raise error_class(message)
     if response.status_code == 400:
         message = response.json().get('error')
-        raise InvalidLogoutTokenError(message)
+        error_class = MESSAGE_TO_ERROR_MAP[message]
+        if error_class:
+            raise error_class(message)
+        else:
+            raise InvalidLogoutTokenError(message)
     if response.status_code == 404:
         raise NotFoundError('Unable to retrieve the page. Are you sure the Clef API endpoint is configured right?')
     raise APIError
