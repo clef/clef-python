@@ -1,56 +1,73 @@
 python-clef
 =================================
+
 A Python wrapper for the [Clef](https://getclef.com/) API. Authenticate a user and access their information in two lines of code. 
 
 
-Requires
---------
-* requests
-
 Installation
 ------------
+
 Install using pip:        
+
  ```
  pip install clef
  ```
 
-
 Getting Started
 -----------
-The Clef API uses OAuth2 for authentication. Pass your credentials to the ClefAPI constructor and make
-a single call to handle the handshake and retrieve user information.
 
-#### Get your credentials
-[Create a Clef application](http://docs.getclef.com/v1.0/docs/creating-a-clef-application) to get your App ID and App secret
+The Clef API lets you retrieve information about a user after they log in to your site with Clef. 
+
+#### Get your API credentials
+
+[Create a Clef application](http://docs.getclef.com/v1.0/docs/creating-a-clef-application) to get your App ID and App secret.
 
 #### Add the Clef button
-The [button](http://docs.getclef.com/v1.0/docs/adding-the-clef-button) has a `data-redirect-url` which is where you will handle the OAuth callback. It can be customized or generated for you.
+
+The [Clef button](http://docs.getclef.com/v1.0/docs/adding-the-clef-button) has a `data-redirect-url`, which is where you'll be interacting with the Clef API.
 
 Usage
 -----
 
 #### Logging in a user
-When a user logs in with Clef on their phone, Clef will send a code to the redirect url you defined in the button, which is where you handle the OAuth handshake:
+
+When a user logs in with Clef, the browser will redirect to your `data-redirect-url`. To retrieve user information, call `get_login_information` in that endpoint: 
+
 ``` 
-from clef import clef
+import clef
 
-code = request.args.get("code")
-api = clef.ClefAPI(app_id=YOUR_APP_ID, app_secret=YOUR_APP_SECRET)
-user_info = api.get_user_info(code=code)
+clef.initialize(app_id=YOUR_APP_ID, app_secret=YOUR_APP_SECRET)
+
+# In your redirect URL route: 
+code = request.args.get('code')
+user_information = clef.get_login_information(code=code)
 ```
+
+For what to do after getting user information, check out our documentation on
+[Associating users](http://docs.getclef.com/v1.0/docs/persisting-users).
+
 #### Logging out a user
-When you configure your application, you also set up a logout webhook URL. Clef sends a POST request to this URL whenever a user who has logged in with Clef logs out so you can handle logging out the user and storing a logout timestamp.
+
+When you configure your Clef integration, you can also set up a logout hook URL. Clef sends a POST to this URL whenever a user logs out with Clef, so you can log them out on your website too.
 
 ```
-from clef import clef
+import clef
 
+clef.initialize(app_id=YOUR_APP_ID, app_secret=YOUR_APP_SECRET)
+
+# In your logout hook route:
 logout_token = request.form.get("logout_token")
-api = clef.ClefAPI(app_id=YOUR_APP_ID, app_secret=YOUR_APP_SECRET)
-clef_user_id = api.logout_user(logout_token=logout_token)
+clef_id = clef.get_logout_information(logout_token=logout_token)
 ```
+
+For what to do after getting a user who's logging out's `clef_id`, see our
+documentation on [Database
+logout](http://docs.getclef.com/v1.0/docs/database-logout).
+
 
 Sample App
 ----------
+
 This repo includes a one-file sample app that uses the Flask framework and demonstrates authentication. To try it out:    
 * Install Flask if you don't already have it      
 `$ pip install Flask`    

@@ -1,11 +1,16 @@
 from .clef import (
-        ClefAPI, 
-        ClefError, 
-        ClefSetupError, 
-        ClefCodeError, 
-        ClefTokenError, 
-        ClefServerError, 
-        ClefConnectionError, 
-        ClefLogoutError, 
-        ClefNotFoundError
+        APIError,
+        InvalidAppIDError,
+        InvalidAppSecretError,
+        InvalidOAuthCodeError,
+        InvalidOAuthTokenError,
+        InvalidLogoutTokenError,
+        ServerError,
+        ConnectionError,
+        NotFoundError,
+        ClefAPI,
+        initialize,
+        get_login_information,
+        get_logout_information,
+        clef_api
 )
