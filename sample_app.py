@@ -27,7 +27,6 @@ def home(name=None, error=None):
 # the data-redirect-url attribute you set in your clef button - line 36 in templates/index.html
 @app.route('/oauth_callback')
 def clef_oauth_callback():
-    # configure the client
     code = request.args.get('code')
     # call to get user information handles the OAuth handshake
     try:
@@ -53,12 +52,12 @@ def clef_oauth_callback():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
+    # Clef is notifying you that a user has logged out from their phone so log them out from your site
     if request.method == 'POST':
-        # Clef is notifying you that a user has logged out from their phone so log them out from your site
         logout_token = request.form.get('logout_token')
-        clef_id = clef.get_logout_information(logout_token=logout_token)
         # use the clef_id to look up the user in your database and update their logged_out_at field
         # http://docs.getclef.com/v1.0/docs/database-logout
+        clef_id = clef.get_logout_information(logout_token=logout_token)
     return redirect(url_for('home'))
 
 @app.route('/oauth_error')
