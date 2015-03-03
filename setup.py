@@ -1,13 +1,7 @@
-#!/usr/bin/env python
 from setuptools import setup
 
-try:
-    from pypandoc import convert
-    long_description=convert('README.md', 'rst')
-except ImportError:
-    print("Warning: pypandoc module not found, could not convert Markdown to RST")
-    long_description='Python wrapper for the Clef API. Visit https://github.com/gwongz/python-clef for more info.'
-
+with open('LONG_DESCRIPTION.rst') as f:
+    long_description = f.read()
 
 setup(
     name='clef',
