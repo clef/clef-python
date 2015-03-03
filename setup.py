@@ -1,18 +1,20 @@
 from setuptools import setup
-
-with open('LONG_DESCRIPTION.rst') as f:
-    long_description = f.read()
+try:
+    with open('LONG_DESCRIPTION.rst') as f:
+        long_description = f.read()
+except:
+    long_description = 'A Python wrapper for the Clef API'
 
 setup(
     name='clef',
     packages=['clef'],
-    version='0.0.6',
+    version='0.0.7',
     description='A Python wrapper for the Clef API',
     long_description=long_description,
     author='Grace Wong',
     author_email='gwongz@gmail.com',
     url='https://github.com/gwongz/clef-python',
-    download_url='https://github.com/gwongz/python-clef/tarball/0.0.6',
+    download_url='https://github.com/gwongz/python-clef/tarball/0.0.7',
     license='MIT',
     keywords=['clef', 'api'],
     classifiers=[
